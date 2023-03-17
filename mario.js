@@ -14,31 +14,31 @@ class Player {
     this.scale = 0.3;
     this.width = 398 * this.scale;
     this.height = 353 * this.scale;
-    this.image = createImage(SPRITESTANDRIGHT);
+    this.image = loadImage(SPRITESTANDRIGHT);
     this.frames = 0;
     this.sprites = {
       stand: {
-        right: createImage(SPRITESTANDRIGHT),
-        left: createImage(SPRITESTANDLEFT),
+        right: loadImage(SPRITESTANDRIGHT),
+        left: loadImage(SPRITESTANDLEFT),
         fireFlower: {
-          right: createImage(FIRESPRITESTANDRIGHT),
-          left: createImage(FIRESPRITESTANDLEFT),
+          right: loadImage(FIRESPRITESTANDRIGHT),
+          left: loadImage(FIRESPRITESTANDLEFT),
         },
       },
       run: {
-        right: createImage(SPRITERUNRIGHT),
-        left: createImage(SPRITERUNLEFT),
+        right: loadImage(SPRITERUNRIGHT),
+        left: loadImage(SPRITERUNLEFT),
         fireFlower: {
-          right: createImage(FIRESPRITERUNRIGHT),
-          left: createImage(FIRESPRITERUNLEFT),
+          right: loadImage(FIRESPRITERUNRIGHT),
+          left: loadImage(FIRESPRITERUNLEFT),
         },
       },
       jump: {
-        right: createImage(MARIOJUMPRIGHT),
-        left: createImage(MARIOJUMPLEFT),
+        right: loadImage(MARIOJUMPRIGHT),
+        left: loadImage(MARIOJUMPLEFT),
         fireFlower: {
-          right: createImage(FIREMARIOJUMPRIGHT),
-          left: createImage(FIREMARIOJUMPLEFT),
+          right: loadImage(FIREMARIOJUMPRIGHT),
+          left: loadImage(FIREMARIOJUMPLEFT),
         },
       },
     };
@@ -57,20 +57,21 @@ class Player {
     ctx.fillStyle = "rgba(255,0,0,0.2)";
     // ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
 
-    ctx.drawImage(
-      this.currentSprite,
-      this.currentCropWidth * this.frames,
-      0,
-      this.currentCropWidth,
-      353,
-      this.position.x,
-      this.position.y,
-      this.width,
-      this.height
-    );
-    ctx.restore();
+    this.currentSprite.then((result) => {
+      ctx.drawImage(
+        result,
+        this.currentCropWidth * this.frames,
+        0,
+        this.currentCropWidth,
+        353,
+        this.position.x,
+        this.position.y,
+        this.width,
+        this.height
+      );
+      ctx.restore();
+    });
   }
-
   update() {
     this.frames++;
     const { currentSprite, sprites } = this;

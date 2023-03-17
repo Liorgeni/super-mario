@@ -107,7 +107,7 @@ async function init() {
     }),
     new Platform({
       x: 6968 + 300,
-      y: canvas.height - largePlatform.height - 200,
+      y: canvas.height - largePlatform.height,
       image: largePlatform,
       block: true,
     }),
@@ -277,7 +277,7 @@ async function init() {
   ];
 
   flagPole = new GenericObject({
-    x: 500,
+    x: 6968 + 400,
     y: canvas.height - largePlatform.height - flagImage.height,
     image: flagImage,
   });
@@ -461,8 +461,8 @@ function animate() {
     }
 
     if (!hitSide) {
-      // if i want the player won't be able to ga back - mark the next line
       flagPole.velocity.x = -player.speed;
+      // if i want the player won't be able to ga back - mark the next line
       scrollOffset += player.speed;
 
       // platforms.forEach((platform) => {
