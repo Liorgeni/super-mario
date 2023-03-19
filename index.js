@@ -17,10 +17,9 @@ async function imagesloader() {
 }
 
 async function init() {
+  await imagesloader();
   player = new Player();
   scrollOffset = 0;
-
-  await imagesloader();
 
   const platformsMap = [
     "lg",
@@ -561,7 +560,7 @@ function animate() {
 
   //  Win scenario
 
-  if (platformImage && scrollOffset + 400 + player.width > 6968 + 300) {
+  if (platformImage && scrollOffset + 400 + player.width > 6968 + 500) {
     console.log("Win");
   }
 

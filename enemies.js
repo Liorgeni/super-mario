@@ -60,7 +60,6 @@ class Goomba {
       this.distance.traveled = 0;
       this.velocity.x = -this.velocity.x;
     }
-    // console.log(this.distance.traveled);
   }
 }
 
