@@ -68,3 +68,15 @@ function createImage(imageSrc) {
   image.src = imageSrc;
   return image;
 }
+
+function score(bollean) {
+  ctx.fillStyle = "black";
+  ctx.font = "20px Arial";
+  ctx.fillText(scoreText, 20, 20);
+  if (!bollean) return;
+  if (bollean) {
+    scoreText = (+scoreText + 1).toString();
+    ctx.fillText(scoreText, 20, 20);
+    console.log(scoreText);
+  }
+}

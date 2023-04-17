@@ -14,6 +14,8 @@ const LARGEPLATFORM = "img/lgPlatform.png";
 const TALLPLATFORM = "img/tPlatform.png";
 const XTALLPLATFORM = "img/xtPlatform.png";
 const FLAGPOLE = "img/flagPole.png";
+const COIN = "img/coin.png";
+
 // Mario
 const SPRITERUNLEFT = "img/spriteMarioRunLeft.png";
 const SPRITERUNRIGHT = "img/spriteMarioRunRight.png";
@@ -64,3 +66,5 @@ let largePlatform;
 let tallPlatform;
 let xTallPlatform;
 let flagImage;
+let coins = [];
+let scoreText = "0";

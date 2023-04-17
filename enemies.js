@@ -110,3 +110,31 @@ class Particle {
     }
   }
 }
+
+//////////////
+
+class Coin {
+  constructor({ position }) {
+    this.position = {
+      x: position.x,
+      y: position.y,
+    };
+
+    this.height = 40;
+    this.width = 40;
+    this.image = createImage(COIN);
+  }
+
+  draw() {
+    ctx.drawImage(
+      this.image,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
+  }
+  update() {
+    this.draw();
+  }
+}

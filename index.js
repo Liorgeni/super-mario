@@ -160,7 +160,7 @@ async function init() {
 
   fireFlowers = [
     new FireFlower({
-      position: { x: 400, y: 100 },
+      position: { x: 1050, y: 100 },
       velocity: {
         x: 0,
         y: 0,
@@ -280,12 +280,27 @@ async function init() {
     y: canvas.height - largePlatform.height - flagImage.height,
     image: flagImage,
   });
+
+  coins = [
+    new Coin({
+      position: { x: 300, y: 300 },
+    }),
+    new Coin({
+      position: { x: 380, y: 300 },
+    }),
+    new Coin({
+      position: { x: 460, y: 300 },
+    }),
+  ];
 }
 
 function animate() {
   requestAnimationFrame(animate);
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // ctx.fillStyle = "red";
+  // ctx.fillRect(20, 20, 20, 20);
 
   genericObjects.forEach((genericObject) => {
     genericObject.update();
@@ -309,7 +324,6 @@ function animate() {
     ) {
       player.velocity.x = 0;
       player.velocity.y = 0;
-      console.log("sdfsd");
     }
   }
 
@@ -425,6 +439,7 @@ function animate() {
       }, 0);
     }
   });
+
   // console.log(particles);
   if (!player) return;
   player.update();
@@ -442,6 +457,25 @@ function animate() {
   } else {
     player.velocity.x *= 0.9;
   }
+  // Mario collects coins
+  score(false);
+  // updateScore();
+
+  coins.forEach((coin, idx) => {
+    coin.update();
+
+    if (
+      objectSTouch({
+        obj1: player,
+        obj2: coin,
+      })
+    ) {
+      coins.splice(idx, 1);
+      score(true);
+
+      console.log("coin collected");
+    }
+  });
 
   // Scrolling code
 
@@ -479,6 +513,9 @@ function animate() {
       particles.forEach((particle) => {
         particle.position.x -= player.speed;
       });
+      coins.forEach((coin) => {
+        coin.position.x -= player.speed;
+      });
     }
   } else if (keys.left.pressed && scrollOffset > 0) {
     for (let i = 0; i < platforms.length; i++) {
@@ -509,6 +546,9 @@ function animate() {
       });
       particles.forEach((particle) => {
         particle.position.x += player.speed;
+      });
+      coins.forEach((coin) => {
+        coin.position.x += player.speed;
       });
     }
   }
