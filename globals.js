@@ -40,7 +40,7 @@ const ONEBLOCK = "img/block.png";
 const TRIPPLEBLOCK = "img/blockTri.png";
 
 // Size measures
-const gravity = 0.5;
+let gravity = 0.5;
 canvas.width = 1024;
 canvas.height = 576;
 
@@ -68,3 +68,4 @@ let xTallPlatform;
 let flagImage;
 let coins = [];
 let scoreText = "0";
+let game;

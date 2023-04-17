@@ -17,6 +17,9 @@ async function imagesloader() {
 }
 
 async function init() {
+  game = {
+    disableInput: false,
+  };
   await imagesloader();
   player = new Player();
   scrollOffset = 0;
@@ -150,7 +153,7 @@ async function init() {
             y: canvas.height - xTallPlatform.height,
             image: xTallPlatform,
             block: true,
-            text: platformDistance,
+            // text: platformDistance,
           })
         );
         platformDistance += xTallPlatform.width - 2;
@@ -274,9 +277,12 @@ async function init() {
     new GenericObject({ x: -1, y: -1, image: backgroundImage }),
     new GenericObject({ x: -1, y: -1, image: hillsImage }),
   ];
-
+  // if (platformImage && scrollOffset + 400 + player.width > 6968 + 500) {
+  //   console.log("Win");
+  // }
   flagPole = new GenericObject({
-    x: 6968 + 400,
+    x: 6968 + 700,
+
     y: canvas.height - largePlatform.height - flagImage.height,
     image: flagImage,
   });
@@ -307,6 +313,20 @@ function animate() {
     genericObject.velocity.x = 0;
   });
 
+  particles.forEach((particle, i) => {
+    particle.update();
+
+    if (
+      particle.fireball &&
+      (particle.position.x - particle.radius >= canvas.width ||
+        particle.position.x + particle.radius <= 0)
+    ) {
+      setTimeout(() => {
+        particles.splice(i, 1);
+      }, 0);
+    }
+  });
+
   platforms.forEach((platform) => {
     platform.update();
     platform.velocity.x = 0;
@@ -315,15 +335,85 @@ function animate() {
   if (flagPole) {
     flagPole.update();
     flagPole.velocity.x = 0;
+    // Win
     // Mario touch flag
     if (
+      !game.disableInput &&
       objectSTouch({
         obj1: player,
         obj2: flagPole,
       })
     ) {
+      game.disableInput = true;
       player.velocity.x = 0;
       player.velocity.y = 0;
+
+      gravity = 0;
+      if (player.powerUps.fireFlower) {
+        player.currentSprite = player.sprites.stand.fireFlower.right;
+      } else {
+        player.currentSprite = player.sprites.stand.right;
+      }
+      gsap.to(player.position, {
+        y: canvas.height - largePlatform.height - player.height,
+        duration: 1,
+        onComplete() {
+          if (player.powerUps.fireFlower) {
+            player.currentSprite = player.sprites.run.fireFlower.right;
+          } else {
+            player.currentSprite = player.sprites.run.right;
+          }
+        },
+      });
+      gsap.to(player.position, {
+        delay: 1,
+        x: canvas.width,
+        duration: 2,
+        ease: "power1.in",
+      });
+
+      // Fireworks
+      const particleCount = 300;
+      const radians = (Math.PI * 2) / particleCount;
+      const power = 2;
+      let increment = 1;
+
+      const inervalId = setInterval(() => {
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(
+            new Particle({
+              position: {
+                x: (canvas.width / 4) * increment,
+                y: canvas.height / 2,
+              },
+              velocity: {
+                x: Math.cos(radians * i) * power * Math.random(),
+                y: Math.sin(radians * i) * power * Math.random(),
+              },
+              radius: Math.random() * 3,
+              color: `hsl(${Math.random() * 200} , 50%, 50%)`,
+              fades: true,
+            }),
+            new Particle({
+              position: {
+                x: canvas.width / 4,
+                y: (canvas.height / 4) * increment,
+              },
+              velocity: {
+                x: Math.cos(radians * i) * power * Math.random(),
+                y: Math.sin(radians * i) * power * Math.random(),
+              },
+              radius: Math.random() * 3,
+              color: `hsl(${Math.random() * 200} , 50%, 50%)`,
+              fades: true,
+            })
+          );
+        }
+        if (increment === 3) {
+          clearInterval(inervalId);
+        }
+        increment++;
+      }, 1000);
     }
   }
 
@@ -426,24 +516,14 @@ function animate() {
       }
     }
   });
-  particles.forEach((particle, i) => {
-    particle.update();
-
-    if (
-      particle.fireball &&
-      (particle.position.x - particle.radius >= canvas.width ||
-        particle.position.x + particle.radius <= 0)
-    ) {
-      setTimeout(() => {
-        particles.splice(i, 1);
-      }, 0);
-    }
-  });
 
   // console.log(particles);
   if (!player) return;
   player.update();
 
+  if (game.disableInput) return;
+
+  // Scrolling code starts
   hitSide = false;
   if (keys.right.pressed && player.position.x < 400) {
     // keys.right.pressed = false;
@@ -598,12 +678,6 @@ function animate() {
     });
   });
 
-  //  Win scenario
-
-  if (platformImage && scrollOffset + 400 + player.width > 6968 + 500) {
-    console.log("Win");
-  }
-
   // Lose scenario
   if (player.position.y > canvas.height) {
     console.log("you lose");
@@ -667,6 +741,7 @@ function animate() {
 }
 
 addEventListener("keydown", ({ keyCode }) => {
+  if (game.disableInput) return;
   switch (keyCode) {
     case 65:
       keys.left.pressed = true;
@@ -711,6 +786,8 @@ addEventListener("keydown", ({ keyCode }) => {
   }
 });
 addEventListener("keyup", ({ keyCode }) => {
+  if (game.disableInput) return;
+
   switch (keyCode) {
     case 65:
       keys.left.pressed = false;

@@ -70,6 +70,7 @@ class Particle {
     radius,
     color = "#654428",
     fireball = false,
+    fades = false,
   }) {
     this.position = {
       x: position.x,
@@ -83,8 +84,12 @@ class Particle {
     this.lifetime = 300;
     this.color = color;
     this.fireball = fireball;
+    this.opacity = 1;
+    this.fades = fades;
   }
   draw() {
+    ctx.save();
+    ctx.globalAlpha = this.opacity;
     ctx.beginPath();
     ctx.arc(
       this.position.x,
@@ -97,6 +102,7 @@ class Particle {
     ctx.fillStyle = this.color;
     ctx.fill();
     ctx.closePath();
+    ctx.restore();
   }
 
   update() {
@@ -107,6 +113,12 @@ class Particle {
 
     if (this.position.y + this.radius + this.velocity.y <= canvas.height) {
       this.velocity.y += gravity * 0.4;
+    }
+    if (this.fades && this.opacity > 0) {
+      this.opacity -= 0.01;
+    }
+    if (this.opacity < 0) {
+      this.opacity = 0;
     }
   }
 }
