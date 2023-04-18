@@ -113,6 +113,12 @@ async function init() {
       image: largePlatform,
       block: true,
     }),
+    new Platform({
+      x: 6968 + largePlatform.width + 300,
+      y: canvas.height - largePlatform.height,
+      image: largePlatform,
+      block: true,
+    }),
   ];
 
   let platformDistance = 0;
@@ -277,9 +283,7 @@ async function init() {
     new GenericObject({ x: -1, y: -1, image: backgroundImage }),
     new GenericObject({ x: -1, y: -1, image: hillsImage }),
   ];
-  // if (platformImage && scrollOffset + 400 + player.width > 6968 + 500) {
-  //   console.log("Win");
-  // }
+
   flagPole = new GenericObject({
     x: 6968 + 700,
 
@@ -331,12 +335,11 @@ function animate() {
     platform.update();
     platform.velocity.x = 0;
   });
-
+  // Win  Mario touch flag
   if (flagPole) {
     flagPole.update();
     flagPole.velocity.x = 0;
-    // Win
-    // Mario touch flag
+
     if (
       !game.disableInput &&
       objectSTouch({
@@ -344,6 +347,8 @@ function animate() {
         obj2: flagPole,
       })
     ) {
+      playAudio("win");
+      playAudio("fireworks");
       game.disableInput = true;
       player.velocity.x = 0;
       player.velocity.y = 0;
@@ -426,6 +431,7 @@ function animate() {
         obj2: fireFlower,
       })
     ) {
+      playAudio("powerup");
       player.powerUps.fireFlower = true;
       setTimeout(() => {
         fireFlowers.splice(idx, 1);
@@ -467,6 +473,7 @@ function animate() {
           }
           setTimeout(() => {
             goombas.splice(idx, 1);
+            playAudio("kill");
             particles.splice(particleIdx, 1);
           }, 0);
         }
@@ -496,6 +503,8 @@ function animate() {
       }
       player.velocity.y -= 20;
       setTimeout(() => {
+        playAudio("kill");
+
         goombas.splice(idx, 1);
       }, 0);
     } else if (
@@ -512,6 +521,7 @@ function animate() {
           player.invincible = false;
         }, 1000);
       } else if (!player.invincible) {
+        playAudio("die");
         init();
       }
     }
@@ -550,6 +560,7 @@ function animate() {
         obj2: coin,
       })
     ) {
+      playAudio("coin");
       coins.splice(idx, 1);
       score(true);
 
@@ -680,11 +691,21 @@ function animate() {
 
   // Lose scenario
   if (player.position.y > canvas.height) {
-    console.log("you lose");
+    playAudio("die");
     init();
   }
 
   // Sprite switching
+
+  if (player.isShooting) {
+    player.currentSprite = player.sprites.shoot.right;
+    if (lastKey === "left") {
+      player.currentSprite = player.sprites.shoot.left;
+    }
+
+    return;
+  }
+  // Sprit jump
   if (player.velocity.y !== 0) return;
   if (
     keys.right.pressed &&
@@ -711,7 +732,7 @@ function animate() {
   ) {
     player.currentSprite = player.sprites.stand.right;
   }
-
+  // Fireflowers sprites
   if (!player.powerUps.fireFlower) return;
   if (
     keys.right.pressed &&
@@ -755,6 +776,7 @@ addEventListener("keydown", ({ keyCode }) => {
       break;
     case 87:
       player.velocity.y -= 14;
+      playAudio("jump");
       if (lastKey === "right") player.currentSprite = player.sprites.jump.right;
       else player.currentSprite = player.sprites.jump.left;
       if (!player.powerUps.fireFlower) break;
@@ -766,7 +788,16 @@ addEventListener("keydown", ({ keyCode }) => {
     case 32:
       if (!player.powerUps.fireFlower) return;
       let velocity = 15;
-      if (lastKey === "left") velocity = -velocity;
+
+      player.isShooting = true;
+      setTimeout(() => {
+        player.isShooting = false;
+      }, 100);
+      playAudio("shot");
+      if (lastKey === "left") {
+        velocity = -velocity;
+      }
+
       particles.push(
         new Particle({
           position: {

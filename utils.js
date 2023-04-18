@@ -80,3 +80,8 @@ function score(bollean) {
     console.log(scoreText);
   }
 }
+
+function playAudio(action) {
+  const audio = new Audio(`sounds/${action}-sound.mp3`);
+  audio.play();
+}

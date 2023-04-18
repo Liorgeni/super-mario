@@ -2,6 +2,7 @@
 
 class Player {
   constructor() {
+    this.isShooting = false;
     this.speed = 10;
     this.position = {
       x: 100,
@@ -40,6 +41,10 @@ class Player {
           right: loadImage(FIREMARIOJUMPRIGHT),
           left: loadImage(FIREMARIOJUMPLEFT),
         },
+      },
+      shoot: {
+        right: loadImage(SHOOTINGSPRITERIGHT),
+        left: loadImage(SHOOTINGSPRITELEFT),
       },
     };
     this.currentSprite = this.sprites.stand.right;
@@ -95,7 +100,9 @@ class Player {
       currentSprite === sprites.jump.right ||
       currentSprite === sprites.jump.left ||
       currentSprite === sprites.jump.fireFlower.right ||
-      currentSprite === sprites.jump.fireFlower.left
+      currentSprite === sprites.jump.fireFlower.left ||
+      currentSprite === sprites.shoot.left ||
+      currentSprite === sprites.shoot.right
     ) {
       this.frames = 0;
     }
