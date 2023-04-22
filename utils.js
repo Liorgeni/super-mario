@@ -71,12 +71,12 @@ function createImage(imageSrc) {
 
 function score(bollean) {
   ctx.fillStyle = "black";
-  ctx.font = "20px Arial";
-  ctx.fillText(scoreText, 20, 20);
+  ctx.font = "30px Arial";
+  ctx.fillText(scoreText, 30, 30);
   if (!bollean) return;
   if (bollean) {
     scoreText = (+scoreText + 1).toString();
-    ctx.fillText(scoreText, 20, 20);
+    ctx.fillText(scoreText, 30, 30);
     console.log(scoreText);
   }
 }

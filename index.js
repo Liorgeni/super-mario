@@ -762,18 +762,23 @@ function animate() {
 }
 
 addEventListener("keydown", ({ keyCode }) => {
+  console.log(keyCode);
+
   if (game.disableInput) return;
   switch (keyCode) {
+    case 37:
     case 65:
       keys.left.pressed = true;
       lastKey = "left";
       break;
     case 83:
       break;
+    case 39:
     case 68:
       keys.right.pressed = true;
       lastKey = "right";
       break;
+    case 38:
     case 87:
       player.velocity.y -= 14;
       playAudio("jump");
@@ -820,14 +825,17 @@ addEventListener("keyup", ({ keyCode }) => {
   if (game.disableInput) return;
 
   switch (keyCode) {
+    case 37:
     case 65:
       keys.left.pressed = false;
       break;
     case 83:
       break;
+    case 39:
     case 68:
       keys.right.pressed = false;
       break;
+    case 38:
     case 87:
       break;
   }
