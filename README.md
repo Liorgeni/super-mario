@@ -4,7 +4,6 @@ This is my version of the classic Super Mario game, developed using JavaScript a
 I used the principles of object-oriented programming (OOP) to manipulate the game objects and adjust them to my needs.
 
 *The game design is not mine. I used sprite sheets from the internet. <br>
-*The game is still under development.
 
 <h2>Table of Contents</h2>
 
